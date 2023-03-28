@@ -2,7 +2,7 @@
   "scripts": {
     "test": "jest --coverage --noStackTrace --silent",
     "testLog": "jest --coverage",
-    "start": "live server"
+    "start": "live-server"
   },
   "jest": {
     "verbose": false,
