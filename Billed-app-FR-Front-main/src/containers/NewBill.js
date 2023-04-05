@@ -24,7 +24,17 @@ export default class NewBill {
     const email = JSON.parse(localStorage.getItem("user")).email
     formData.append('file', file)
     formData.append('email', email)
-
+    const sendButton = window.document.getElementById("btn-send-bill");
+    const acceptedTypes = ["image/png", "image/jpeg", "image/jpg"];
+    if (acceptedTypes.includes(file.type)) {
+      sendButton.removeAttribute("disabled");
+    } else {
+      sendButton.setAttribute("disabled", "");
+      alert(
+          'Mauvaise extension de pièce jointe - Veuillez choisir un nouveau fichier à transmettre qui contient une extension JPG / JPEG / PNG'
+      )
+      e.target.value = ''
+    }
     this.store
       .bills()
       .create({
