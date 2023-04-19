@@ -5,18 +5,20 @@ import { ROUTES_PATH } from '../constants/routes.js'
 import USERS_TEST from '../constants/usersTest.js'
 import Logout from "./Logout.js"
 
+
+//verifie si les data dont presente est si elle ne sont pas vide
+//  la fonction retourne le tableau filtré des factures qui depend  des conditions de filtrage
 export const filteredBills = (data, status) => {
   return (data && data.length) ?
     data.filter(bill => {
       let selectCondition
 
-      // in jest environment
       if (typeof jest !== 'undefined') {
         selectCondition = (bill.status === status)
       }
-      /* istanbul ignore next */
+
       else {
-        // in prod environment
+
         const userEmail = JSON.parse(localStorage.getItem("user")).email
         selectCondition =
           (bill.status === status) &&
@@ -131,18 +133,40 @@ export default class {
   }
 
   handleShowTickets(e, bills, index) {
+    // if (this.counter === undefined || this.index !== index) this.counter = 0
+    // if (this.index === undefined || this.index !== index) this.index = index
+    // if (this.counter % 2 === 0) {
+    //   $(`#arrow-icon${this.index}`).css({ transform: 'rotate(0deg)'})
+    //   $(`#status-bills-container${this.index}`)
+    //       .html(cards(filteredBills(bills, getStatus(this.index))))
+    //   this.counter ++
+    // } else {
+    //   $(`#arrow-icon${this.index}`).css({ transform: 'rotate(90deg)'})
+    //   $(`#status-bills-container${this.index}`)
+    //       .html("")
+    //   this.counter ++
+    // }
+    //
+    // bills.forEach(bill => {
+    //   $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
+    // })
+    //
+    // return bills
+
     if (this.counter === undefined || this.index !== index)
       this.counter = 0;
     if (this.index === undefined || this.index !== index)
       this.index = index;
     if (this.counter % 2 === 0) {
       $(`#arrow-icon${this.index}`).css({ transform: 'rotate(0deg)' });
-      // fetch bills in selected dropdown
+      // utilisation de la fonction filteredBills
+      // atttribue le statue via l'index
       let selectedBills = filteredBills(bills, getStatus(this.index));
       $(`#status-bills-container${this.index}`).html(
           cards(selectedBills)
       );
-      // add event for each bills in selected dropdown
+      // Permet d'ouvrir les popup en fonction du statue
+      // le bug provien du fait que toutes les cart etait choisie
       selectedBills.forEach(bill => {
         $(`#open-bill${bill.id}`).click(e =>
             this.handleEditTicket(e, bill, bills)
@@ -154,7 +178,7 @@ export default class {
       $(`#status-bills-container${this.index}`).html('');
       this.counter++;
     }
-    return;
+    return bills;
 
   }
 

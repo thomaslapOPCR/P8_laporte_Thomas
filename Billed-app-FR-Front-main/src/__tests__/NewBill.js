@@ -1,59 +1,50 @@
 /**
  * @jest-environment jsdom
  */
-
 import { screen, fireEvent, waitFor } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import mockStore from "../__mocks__/store.js";
 import router from "../app/Router.js";
-import { ROUTES_PATH } from "../constants/routes";
+import {ROUTES, ROUTES_PATH} from "../constants/routes";
 import { localStorageMock } from '../__mocks__/localStorage'
 import BillsUI from '../views/BillsUI.js'
 import NewBillUI from '../views/NewBillUI'
 import NewBill from '../containers/NewBill'
-jest.mock("../app/store", () => mockStore);
+import {fileValidation} from "../app/format.js";
+
+jest.mock("../app/Store", () => mockStore);
 
 beforeEach(() => {
-  localStorage.setItem(
-      "user",
-      JSON.stringify({ type: "Employee", email: "a@a" })
-  );
-  const root = document.createElement("div");
-  root.setAttribute("id", "root");
-  document.body.append(root);
-  router();
-  window.onNavigate(ROUTES_PATH.NewBill);
-});
+  Object.defineProperty(window, "localStorage", { value: localStorageMock } )
+  window.localStorage.setItem( "user", JSON.stringify( { type: "Employee" } ) )
+  document.body.innerHTML = NewBillUI()
+  const onNavigate = (pathname) => {document.body.innerHTML = ROUTES({ pathname })}
+  const newBill = new NewBill({document, onNavigate, store: mockStore, localStorage: window.localStorage})
+})
 
-afterEach(() => {
-  jest.clearAllMocks();
-  document.body.innerHTML = "";
-});
+describe("Given I am connected", () => {
+  describe("And test Uploaded files", () => {
 
+    test("Png format", async () => {
+      const filePNG = new File(['hello'], 'hello.png', {type: 'image/png'})
+      await waitFor(() => screen.getByTestId("file"))
+      const InputFile = screen.getByTestId("file")
+      userEvent.upload(InputFile, filePNG)
+      expect(InputFile.files[0].name).toEqual("hello.png")
+      const valid = fileValidation(filePNG)
+      expect(valid).toBeTruthy()
+    })
 
-describe("Given I am connected as an employee", () => {
-  describe("When I am on NewBill Page", () => {
-    /**
-     * Test si le file est un format valide
-     */
-    test("I can upload a justified PNG file", async () => {
+    test("text format", async () => {
+      const fileText = new File(['hello'], 'hello.txt', {type: 'text/plain'})
+      await waitFor(() => screen.getByTestId("file"))
+      const InputFile = screen.getByTestId("file")
+      userEvent.upload(InputFile, fileText)
+      userEvent.click(InputFile)
+      expect(screen.getByTestId('alertFormat')).toBeTruthy()
+      const noValid = fileValidation(fileText)
+      expect(noValid).not.toBeTruthy()
+    })
 
-      const file = new File(["file"], "file.png", { type: "image/png" });
-
-      const fileInput = await waitFor(() => screen.getByTestId("file"));
-      userEvent.upload(fileInput, file);
-      expect(fileInput.files[0]).toStrictEqual(file);
-      expect(fileInput.files).toHaveLength(1);
-    });
-    /**
-     * Test si le ficher a un format invalide
-     */
-    test("I cannot upload a justified text file", async () => {
-
-      const file = new File(["file"], "file.txt", { type: "text/plain" });
-      const fileInput = await waitFor(() => screen.getByTestId("file"));
-      userEvent.upload(fileInput, file);
-      expect(fileInput.files).toHaveLength(1);
-    });
   })
 })

@@ -5,6 +5,7 @@ import LoadingPage from "./LoadingPage.js"
 import Actions from './Actions.js'
 
 const row = (bill) => {
+    // bill.sort((a, b) => new Date(b.date) - new Date(a.date))
   return (`
     <tr>
       <td>${bill.type}</td>
@@ -18,9 +19,13 @@ const row = (bill) => {
     </tr>
     `)
   }
-
+//mettre la correction du trie ici
 const rows = (data) => {
-  return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
+    if (data && data.length) {
+        const dataSorted = [...data].sort((a, b) => (a.date < b.date ? 1 : -1));
+        return dataSorted.map((bill) => row(bill)).join("");
+    }
+    return [];
 }
 
 export default ({ data: bills, loading, error }) => {

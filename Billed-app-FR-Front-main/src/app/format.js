@@ -17,3 +17,33 @@ export const formatStatus = (status) => {
       return "Refused"
   }
 }
+
+
+export function fileValidation(file)  {
+  let fileInput = file
+  const filePath = fileInput.name
+  const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+  const alertForm = document.createElement("div");
+  const sendingButtons = document.querySelector('#btn-send-bill');
+
+  alertForm.classList.add("alertFormat")
+  alertForm.setAttribute('data-testid', 'alertFormat')
+  alertForm.id = 'alertFormat'
+  alertForm.innerHTML = 'Uniquement les formats jpeg/jpg/png sont acceptés!'
+
+  if(!allowedExtensions.exec(filePath) || filePath===''){
+    fileInput.value = '';
+    document.querySelector(`input[data-testid="file"]`).after(alertForm)
+    sendingButtons.disabled = true;
+    return false;
+  }else{
+    try {
+      document.getElementById('alertFormat').innerHTML = ''//.remove()
+      sendingButtons.disabled = false;
+    } catch (error) {
+      console.log('-')
+    }
+    return true;
+  }
+}
+
