@@ -30,6 +30,8 @@ describe("Given I am connected", () => {
       await waitFor(() => screen.getByTestId("file"))
       const InputFile = screen.getByTestId("file")
       userEvent.upload(InputFile, filePNG)
+      // userEvent.click(InputFile)
+      // expect(screen.getByTestId('alertFormat')).not.toBeInTheDocument();
       expect(InputFile.files[0].name).toEqual("hello.png")
       const valid = fileValidation(filePNG)
       expect(valid).toBeTruthy()
