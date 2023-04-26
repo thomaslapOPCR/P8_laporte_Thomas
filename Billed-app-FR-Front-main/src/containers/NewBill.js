@@ -1,6 +1,6 @@
 import { ROUTES_PATH } from '../constants/routes.js'
 import Logout from "./Logout.js"
-import { fileValidation } from "../app/format.js";
+import {fileValidation} from "../app/format.js";
 
 
 export default class NewBill {
@@ -42,11 +42,8 @@ export default class NewBill {
           this.billId = key
           this.fileUrl = fileUrl
           this.fileName = fileName
-        }).catch(error => console.error(error))
-    } else {
-      e.preventDefault();
+        }).catch(error => console.error(error)) // TODO Faire un test ici
     }
-
   }
   handleSubmit = e => {
     e.preventDefault()
@@ -78,7 +75,9 @@ export default class NewBill {
       .then(() => {
         this.onNavigate(ROUTES_PATH['Bills'])
       })
-      .catch(error => console.error(error))
+      .catch(error => console.error(error))  // TODO faire un test
     }
   }
+
+
 }

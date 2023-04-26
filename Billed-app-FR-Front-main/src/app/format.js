@@ -47,3 +47,13 @@ export function fileValidation(file)  {
   }
 }
 
+export const getByTextRegex = (regex) => {
+  const matches = Array.from(document.querySelectorAll('*')).map(el => Array.from(el.childNodes).filter(node => node.nodeType === 3 && node.textContent.match(regex)).map(node => ({
+    node,
+    text: node.textContent.trim(),
+    element: el
+  }))).reduce((acc, matches) => [...acc, ...matches], []);
+
+  return matches[0]?.node;
+};
+
