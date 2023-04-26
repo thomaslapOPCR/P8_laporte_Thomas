@@ -51,7 +51,7 @@ describe("Given I am connected", () => {
 
   })
 
-  describe("When I create new bill", () => {
+  describe("create new bill", () => {
     test("send bill API POST", async () => {
       // utilise beforeEach
       const content = await screen.getAllByText("Envoyer une note de frais");
@@ -60,7 +60,7 @@ describe("Given I am connected", () => {
   })
 
 
-  describe("When submit new bill in form", () => {
+  describe("write new bill form", () => {
     test("Then send form", async () => {
       Object.defineProperty(window, "localStorage", { value: localStorageMock } )
       window.localStorage.setItem( "user", JSON.stringify( { type: "Employee" , email: "a@a"} ) )

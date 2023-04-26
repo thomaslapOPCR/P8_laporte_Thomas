@@ -154,7 +154,7 @@ describe("Given I am connected as an employee", () => {
 
     describe("When I navigate to Bills", () => {
 
-      test("fetches bills from mock API GET", async () => {
+      test("fetches bills API GET", async () => {
 
         const spyMock = jest.spyOn(mockStore, 'bills');
         const bills = await mockStore.bills().list()
