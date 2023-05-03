@@ -34,6 +34,8 @@ const onNavigate = (pathname) => {
 };
 
 describe("Given I am connected as an employee", () => {
+
+
   describe("When I am on Bills Page", () => {
     test("Then bill icon in vertical layout should be highlighted", async () => {
 
@@ -87,26 +89,6 @@ describe("Given I am connected as an employee", () => {
       });
     })
 
-    describe("test loading the bills", () => {
-      test(" load the bills",async()=>{
-        const bill = mockStore.bills();
-          //vérifier si cette méthode est appelée pendant l'exécution du test.
-        const spy = jest.spyOn(bill,'list')
-        const billList = await bill.list();
-        expect(spy).toBeCalled()
-        expect(billList.length).toBe(4);
-      })
-
-      test("error loading bills", async()=>{
-        let billList;
-
-        billList = jest.fn(mockStore.bills().list());
-        billList.mockImplementation(()=>{
-          return Promise.reject(new Error('API error'))
-        })
-        billList().catch(error =>{expect(error).toBeDefined()})
-      })
-    })
     describe(" click  Eye icon", () => {
       test("open modal", () => {
         Object.defineProperty(window, "localStorage", {
@@ -152,8 +134,7 @@ describe("Given I am connected as an employee", () => {
 
     });
 
-    describe("When I navigate to Bills", () => {
-
+    describe("When I navigate to Bills", () => {// TODO  test unitaire 404 500
       test("fetches bills API GET", async () => {
 
         const spyMock = jest.spyOn(mockStore, 'bills');
@@ -170,6 +151,34 @@ describe("Given I am connected as an employee", () => {
         expect(spyMock).toHaveBeenCalled()
         expect(tableRows.length).toEqual(bills.length)
       })
+      test("500 error message", async () => {
+        mockStore.bills(() => {
+          return {
+            create: (bills) => {
+              return Promise.reject(new Error("Erreur 500"))
+            }
+          }
+        })
+        document.body.innerHTML = BillsUI({ error: 'Erreur 500' });
+        const message = await screen.getByText(/Erreur 500/)
+        expect(message).toBeTruthy()
+      });
+
+      test("404 error message", async () => {
+        mockStore.bills(() => {
+          return {
+            create: (bills) => {
+              return Promise.reject(new Error("Erreur 404"))
+            }
+          }
+        })
+        document.body.innerHTML = BillsUI({ error: 'Erreur 404' });
+        const message = await screen.getByText(/Erreur 404/)
+        expect(message).toBeTruthy()
+      });
+
+
     })
   })
 })
+

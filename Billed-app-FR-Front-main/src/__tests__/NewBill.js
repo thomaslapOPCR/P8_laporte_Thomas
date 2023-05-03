@@ -23,6 +23,10 @@ beforeEach(() => {
 })
 
 describe("Given I am connected", () => {
+  // test('toto', ()=>{
+  //   const t = 2;
+  //   expect(t).toBeTruthy();
+  // })
 
   describe("And test Uploaded files", () => {
 
@@ -100,24 +104,6 @@ describe("Given I am connected", () => {
       expect(message).toBeTruthy()
     });
 
-    test("404 error message", async() => {
-
-      //Permet de mettre un espion sur une fonction qui est executée par une autre fonction test.
-      jest.spyOn(mockStore, "bills");
-      //Ici on appelle la fonction create() de store.js et on simule le rejet de la promesse
-      mockStore.bills(() => {
-        return {
-          create: (bill) => {
-            return Promise.reject(new Error("Erreur 404"))
-          },
-        }
-      })
-      //page 404
-      document.body.innerHTML = BillsUI({ error: "Erreur 404" })
-      //On s'attend à voir affichée l'erreur.
-      const message = await screen.getByText(/Erreur 404/)
-      expect(message).toBeTruthy()
-      })
   })
 })
 
