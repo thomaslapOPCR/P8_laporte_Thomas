@@ -103,7 +103,6 @@ describe("Given I am connected", () => {
       const message = await screen.getByText(/Erreur 500/)
       expect(message).toBeTruthy()
     });
-
   })
 })
 

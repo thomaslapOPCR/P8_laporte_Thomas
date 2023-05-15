@@ -159,6 +159,7 @@ const update = async (req, res) => {
       commentAdmin,
       amount,
     };
+
     const bill = user.type === 'Admin'
       ? await Bill.findOne({ where: { key: req.params.id } })
       : await Bill.findOne({
@@ -187,6 +188,7 @@ const remove = async (req, res) => {
     return res.status(500).send({ message: err.message });
   }
 };
+
 
 module.exports = {
   list,
